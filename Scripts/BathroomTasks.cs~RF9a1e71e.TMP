@@ -1,0 +1,88 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class BathroomTasks : MonoBehaviour, Task
+{
+    [SerializeField] private Image checkbox1;
+    [SerializeField] private Image checkbox2;
+    [SerializeField] private Sprite checkedSprite;
+
+    private bool task1Done = false;
+    private bool task2Done = false;
+    private Interactable interactable;
+    private int mirrorCount = 0;
+    private bool checkedTask = false;
+
+    public void setInteractable(Interactable newInteractable)
+    {
+        interactable = newInteractable;
+    }
+
+    public void mirrorScratched()
+    {
+        mirrorCount++;
+        if(mirrorCount >= 3)
+        {
+            task1Done = true;
+            if (checkbox1 != null)
+                checkbox1.sprite = checkedSprite;
+        }
+    }
+
+    public void toiletDone()
+    {
+        task2Done = true;
+        if (checkbox2 != null)
+            checkbox2.sprite = checkedSprite;
+    }
+
+    public void dragCompleted(DragDrop dropped)
+    {
+
+    }
+
+    public void dropCompleted()
+    {
+
+    }
+
+    public void endMinigame()
+    {
+        int completeness = 0;
+        if (task1Done && !task2Done || !task1Done && task2Done)
+        {
+            completeness++;
+            checkedTask = true;
+            Data.score = Data.score + 10;
+        }
+        if (task1Done && task2Done)
+        {
+            if (checkedTask)
+            {
+                completeness++;
+                checkedTask = false;
+                Data.score = Data.score + 10;
+            }
+            else
+            {
+                completeness = completeness + 2;
+                Data.score = Data.score + 20;
+            }
+        }
+        interactable.minigameEnded(completeness);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
